@@ -58,25 +58,7 @@ A new "Fluid Generator Fuels" category lists every fluid currently in the data m
 
 ## Installation
 
-Drop `justdirefuels-1.0.0.jar` into your `mods/` folder alongside the JDT jar. That's it.
-
-## Building from source
-
-The addon resolves Just Dire Things from its locally-published maven repository at `../JustDireThings/repo/`. Before building the addon for the first time (or after pulling new JDT changes), publish JDT:
-
-```sh
-cd ../JustDireThings
-./gradlew publish
-```
-
-Then build the addon:
-
-```sh
-cd ../justDireFuels
-./gradlew build
-```
-
-The output jar lands in `build/libs/`.
+Drop the mod into your `mods/` folder alongside the JDT jar. That's it.
 
 ## Sample datapack
 
