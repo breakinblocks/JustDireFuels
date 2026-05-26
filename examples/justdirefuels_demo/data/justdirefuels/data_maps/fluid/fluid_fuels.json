@@ -1,0 +1,9 @@
+{
+  "values": {
+    "minecraft:lava": { "fe_per_mb": 100 },
+    "minecraft:flowing_lava": { "fe_per_mb": 100 },
+
+    "justdirethings:refined_t2_fluid_source":  { "fe_per_mb": 999 },
+    "justdirethings:refined_t2_fluid_flowing": { "fe_per_mb": 999 }
+  }
+}

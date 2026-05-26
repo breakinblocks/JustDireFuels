@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "package": "com.breakinblocks.justdirefuels.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "refmap": "mixins.justdirefuels.refmap.json",
+  "mixins": [
+    "GeneratorFluidT1BEMixin",
+    "GeneratorFluidItemHandlerMixin",
+    "JustDireFluidTankMixin",
+    "GeneratorT1BEMixin"
+  ],
+  "minVersion": "0.8"
+}

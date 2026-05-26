@@ -1,0 +1,32 @@
+# Build artifacts
+build/
+.gradle/
+out/
+bin/
+
+# NeoForge dev runs
+runs/
+
+# Generated sources
+src/generated/.cache/
+
+# IDE
+.idea/
+*.iml
+*.iws
+*.ipr
+.vscode/
+.classpath
+.project
+.settings/
+.factorypath
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Markdown — ignore everything by default, then re-include the tracked ones
+*.md
+!README.md
+!LICENSE.md
+!metadata/**/*.md

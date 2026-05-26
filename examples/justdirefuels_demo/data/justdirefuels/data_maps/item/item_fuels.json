@@ -1,0 +1,5 @@
+{
+  "values": {
+    "minecraft:diamond": { "fe_per_tick": 500, "burn_speed_multiplier": 8 }
+  }
+}
