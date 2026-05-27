@@ -3,7 +3,7 @@ plugins {
     id 'eclipse'
     id 'idea'
     id 'maven-publish'
-    id 'net.neoforged.moddev' version '2.0.137'
+    id 'net.neoforged.moddev' version '2.0.141'
 }
 
 tasks.named('wrapper', Wrapper).configure {
@@ -21,14 +21,6 @@ repositories {
     mavenLocal()
 
     maven {
-        name "JustDireThingsLocal"
-        url "file://${rootDir}/../JustDireThings/repo"
-        content {
-            includeGroup "com.direwolf20.justdirethings"
-        }
-    }
-
-    maven {
         url 'https://maven.blamejared.com'
         content {
             includeGroup "vazkii.patchouli"
@@ -36,23 +28,22 @@ repositories {
         }
     }
 
-    maven { url = "https://www.cursemaven.com" }
+    maven {
+        url = "https://www.cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
+    }
 }
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(21))
-        vendor.set(JvmVendorSpec.JETBRAINS)
+        languageVersion.set(JavaLanguageVersion.of(25))
     }
 }
 
 neoForge {
     version = project.neo_version
-
-    parchment {
-        mappingsVersion = project.parchment_mappings_version
-        minecraftVersion = project.parchment_minecraft_version
-    }
 
     runs {
         configureEach {
@@ -71,8 +62,8 @@ neoForge {
             programArgument '--nogui'
         }
 
-        data {
-            data()
+        clientData {
+            clientData()
             programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
         }
     }
@@ -93,8 +84,8 @@ configurations {
 dependencies {
     implementation "net.neoforged:neoforge:${neo_version}"
 
-    compileOnly "com.direwolf20.justdirethings:JustDireThings:${jdt_version}"
-    localRuntime "com.direwolf20.justdirethings:JustDireThings:${jdt_version}"
+    compileOnly "curse.maven:just-dire-things-${jdt_curse_project}:${jdt_curse_file}"
+    localRuntime "curse.maven:just-dire-things-${jdt_curse_project}:${jdt_curse_file}"
 
     compileOnly "mezz.jei:jei-${jei_mc_version}-common-api:${jei_version}"
     compileOnly "mezz.jei:jei-${jei_mc_version}-neoforge-api:${jei_version}"
@@ -108,7 +99,6 @@ tasks.withType(ProcessResources).configureEach {
             loader_version_range: loader_version_range,
             mod_id              : mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version,
             mod_authors         : mod_authors, mod_description: mod_description,
-            jdt_version         : jdt_version,
     ]
     inputs.properties replaceProperties
 

@@ -9,7 +9,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.registries.datamaps.DataMapType;
 import net.neoforged.neoforge.registries.datamaps.RegisterDataMapTypesEvent;
 
-@EventBusSubscriber(modid = JustDireFuels.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = JustDireFuels.MOD_ID)
 public final class FuelDataMaps {
     public static final DataMapType<Fluid, FluidFuelData> FLUID_FUELS = DataMapType.builder(
         JustDireFuels.id("fluid_fuels"),

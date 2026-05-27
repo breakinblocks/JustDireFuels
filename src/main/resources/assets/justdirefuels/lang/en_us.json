@@ -1,4 +1,9 @@
 {
   "jei.justdirefuels.fluid_fuel.title": "Fluid Generator Fuels",
-  "jei.justdirefuels.fluid_fuel.fe_per_mb": "%s FE / mB"
+  "jei.justdirefuels.fluid_fuel.fe_per_mb": "%s FE / mB",
+  "jei.justdirefuels.item_fuel.title": "Solid Generator Fuels",
+  "jei.justdirefuels.item_fuel.fe_per_tick": "%s FE / tick",
+  "jei.justdirefuels.item_fuel.fe_per_tick_default": "Default FE / tick",
+  "jei.justdirefuels.item_fuel.burn_speed": "Burn speed %s",
+  "jei.justdirefuels.item_fuel.burn_time": "%s burn ticks"
 }

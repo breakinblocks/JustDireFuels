@@ -3,10 +3,10 @@ package com.breakinblocks.justdirefuels.mixin;
 import com.breakinblocks.justdirefuels.datamap.FuelLookup;
 import com.breakinblocks.justdirefuels.datamap.ItemFuelData;
 import com.direwolf20.justdirethings.common.blockentities.GeneratorT1BE;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import com.direwolf20.justdirethings.common.capabilities.GeneratorItemHandler;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -19,26 +19,32 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class GeneratorT1BEMixin {
     @Shadow int fuelBurnMultiplier;
 
-    @Shadow public abstract ItemStackHandler getMachineHandler();
+    @Shadow public abstract GeneratorItemHandler getMachineHandler();
 
     @Unique
     private int justdirefuels$activeFePerTick = -1;
 
+    @Unique
+    private ItemResource justdirefuels$currentFuelResource() {
+        GeneratorItemHandler handler = getMachineHandler();
+        return (ItemResource) handler.getResource(0);
+    }
+
     @Inject(method = "doBurn", at = @At("HEAD"))
     private void justdirefuels$captureFePerTick(CallbackInfo ci) {
-        ItemStack fuelStack = getMachineHandler().getStackInSlot(0);
         justdirefuels$activeFePerTick = -1;
-        if (fuelStack.isEmpty()) return;
-        ItemFuelData data = FuelLookup.getItem(fuelStack.getItem());
+        ItemResource resource = justdirefuels$currentFuelResource();
+        if (resource.isEmpty()) return;
+        ItemFuelData data = FuelLookup.getItem(resource.getItem());
         if (data == null) return;
         data.fePerTick().ifPresent(v -> justdirefuels$activeFePerTick = v);
     }
 
-    @Inject(method = "doBurn", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;hasCraftingRemainingItem()Z"))
+    @Inject(method = "doBurn", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;getCraftingRemainder()Lnet/minecraft/world/item/ItemStackTemplate;"))
     private void justdirefuels$overrideBurnMultiplier(CallbackInfo ci) {
-        ItemStack fuelStack = getMachineHandler().getStackInSlot(0);
-        if (fuelStack.isEmpty()) return;
-        ItemFuelData data = FuelLookup.getItem(fuelStack.getItem());
+        ItemResource resource = justdirefuels$currentFuelResource();
+        if (resource.isEmpty()) return;
+        ItemFuelData data = FuelLookup.getItem(resource.getItem());
         if (data == null) return;
         data.burnSpeedMultiplier().ifPresent(v -> fuelBurnMultiplier = v);
     }
@@ -49,13 +55,12 @@ public abstract class GeneratorT1BEMixin {
     }
 
     @Inject(method = "saveAdditional", at = @At("TAIL"))
-    private void justdirefuels$save(CompoundTag tag, HolderLookup.Provider provider, CallbackInfo ci) {
-        if (justdirefuels$activeFePerTick > 0) tag.putInt("justdirefuels:active_fe_per_tick", justdirefuels$activeFePerTick);
+    private void justdirefuels$save(ValueOutput output, CallbackInfo ci) {
+        if (justdirefuels$activeFePerTick > 0) output.putInt("justdirefuels:active_fe_per_tick", justdirefuels$activeFePerTick);
     }
 
     @Inject(method = "loadAdditional", at = @At("TAIL"))
-    private void justdirefuels$load(CompoundTag tag, HolderLookup.Provider provider, CallbackInfo ci) {
-        justdirefuels$activeFePerTick = tag.contains("justdirefuels:active_fe_per_tick")
-            ? tag.getInt("justdirefuels:active_fe_per_tick") : -1;
+    private void justdirefuels$load(ValueInput input, CallbackInfo ci) {
+        justdirefuels$activeFePerTick = input.getIntOr("justdirefuels:active_fe_per_tick", -1);
     }
 }

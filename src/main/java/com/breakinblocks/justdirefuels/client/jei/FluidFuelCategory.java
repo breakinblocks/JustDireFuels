@@ -2,56 +2,51 @@ package com.breakinblocks.justdirefuels.client.jei;
 
 import com.breakinblocks.justdirefuels.JustDireFuels;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
-import mezz.jei.api.gui.drawable.IDrawable;
-import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
+import mezz.jei.api.gui.placement.HorizontalAlignment;
+import mezz.jei.api.gui.placement.VerticalAlignment;
+import mezz.jei.api.gui.widgets.IRecipeExtrasBuilder;
 import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.neoforge.NeoForgeTypes;
 import mezz.jei.api.recipe.IFocusGroup;
-import mezz.jei.api.recipe.RecipeIngredientRole;
-import mezz.jei.api.recipe.RecipeType;
-import mezz.jei.api.recipe.category.IRecipeCategory;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import mezz.jei.api.recipe.category.AbstractRecipeCategory;
+import mezz.jei.api.recipe.types.IRecipeType;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
-public class FluidFuelCategory implements IRecipeCategory<FluidFuelRecipe> {
-    public static final RecipeType<FluidFuelRecipe> TYPE = RecipeType.create(
+public class FluidFuelCategory extends AbstractRecipeCategory<FluidFuelRecipe> {
+    public static final IRecipeType<FluidFuelRecipe> TYPE = IRecipeType.create(
         JustDireFuels.MOD_ID, "fluid_generator_fuels", FluidFuelRecipe.class
     );
 
-    private final IDrawable background;
-    private final IDrawable icon;
-    private final Component title = Component.translatable("jei.justdirefuels.fluid_fuel.title");
+    private static final int WIDTH = 150;
+    private static final int HEIGHT = 36;
 
     public FluidFuelCategory(IGuiHelper guiHelper, ItemStack iconStack) {
-        this.background = guiHelper.createBlankDrawable(120, 30);
-        this.icon = guiHelper.createDrawableItemStack(iconStack);
+        super(TYPE,
+            Component.translatable("jei.justdirefuels.fluid_fuel.title"),
+            guiHelper.createDrawableItemStack(iconStack),
+            WIDTH, HEIGHT);
     }
-
-    @Override
-    public RecipeType<FluidFuelRecipe> getRecipeType() { return TYPE; }
-
-    @Override
-    public Component getTitle() { return title; }
-
-    @Override
-    public IDrawable getBackground() { return background; }
-
-    @Override
-    public IDrawable getIcon() { return icon; }
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, FluidFuelRecipe recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT, 4, 6)
-            .addIngredient(NeoForgeTypes.FLUID_STACK, recipe.fluid());
+        builder.addInputSlot(4, 9)
+            .setStandardSlotBackground()
+            .add(recipe.fluid().getFluid(), recipe.fluid().getAmount());
     }
 
     @Override
-    public void draw(FluidFuelRecipe recipe, IRecipeSlotsView slots, GuiGraphics graphics, double mouseX, double mouseY) {
-        Component text = Component.translatable("jei.justdirefuels.fluid_fuel.fe_per_mb", recipe.fePerMb());
-        Font font = Minecraft.getInstance().font;
-        graphics.drawString(font, text, 30, 11, 0x404040, false);
+    public void createRecipeExtras(IRecipeExtrasBuilder builder, FluidFuelRecipe recipe, IFocusGroup focuses) {
+        builder.addRecipeArrow().setPosition(28, 10);
+
+        Component text = Component.translatable(
+            "jei.justdirefuels.fluid_fuel.fe_per_mb",
+            Component.literal(String.valueOf(recipe.fePerMb())).withStyle(ChatFormatting.WHITE)
+        ).withStyle(ChatFormatting.GRAY);
+
+        builder.addText(text, WIDTH - 60, HEIGHT)
+            .setPosition(60, 0)
+            .setTextAlignment(HorizontalAlignment.LEFT)
+            .setTextAlignment(VerticalAlignment.CENTER);
     }
 }

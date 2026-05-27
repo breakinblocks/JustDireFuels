@@ -26,7 +26,7 @@ description='''${mod_description}'''
 [[dependencies.${mod_id}]]
     modId="justdirethings"
     type="required"
-    versionRange="[${jdt_version},)"
+    versionRange="[1.6.10,)"
     ordering="AFTER"
     side="BOTH"
 

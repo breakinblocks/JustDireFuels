@@ -1,12 +1,13 @@
 # Just Dire Fuels
 
-A NeoForge 1.21.1 addon for [Just Dire Things](https://www.curseforge.com/minecraft/mc-mods/just-dire-things) that replaces JDT's hardcoded, config-locked fuel values with **data-driven fuels** for both the Fluid Generator T1 and the Solid Generator T1. Datapacks can add new fuels, override existing values, and the changes are reflected in JEI.
+A NeoForge 26.1 addon for [Just Dire Things](https://www.curseforge.com/minecraft/mc-mods/just-dire-things) that replaces JDT's hardcoded, config-locked fuel values with **data-driven fuels** for both the Fluid Generator T1 and the Solid Generator T1. Datapacks can add new fuels, override existing values, and the changes are reflected in JEI.
 
 ## Requirements
 
-- Minecraft 1.21.1
-- NeoForge 21.1.209+
-- Just Dire Things 1.5.7+
+- Minecraft 26.1.2
+- NeoForge 26.1.2.x-beta
+- Java 25
+- Just Dire Things 1.6.10+
 - JEI (optional, for the in-game fuel browser)
 
 ## What it changes
@@ -77,9 +78,9 @@ The addon uses four mixins against JDT. None of them remove or break existing JD
 | Mixin target | What it does |
 |---|---|
 | `GeneratorFluidT1BE.getFePerFuelTick` | Returns data-map `fe_per_mb` when the tank's fluid is in the map; otherwise lets JDT's `RefinedFuel.fePerMb` run. |
-| `GeneratorFluidItemHandler.isItemValid` | Accepts buckets/containers of any fluid present in the data map. |
-| `JustDireFluidTank.isFluidValid` | Accepts any fluid in the data map (lets non-`RefinedFuel` fluids settle into the tank). |
-| `GeneratorT1BE` (capture + getter + NBT) | Snapshots data-map `fe_per_tick` and `burn_speed_multiplier` at burn start, persists them across world reloads, and serves them from the getters during the burn. |
+| `GeneratorFluidItemHandler.isValid(int, ItemResource)` | Accepts buckets/containers of any fluid present in the data map. |
+| `JustDireFluidTank.isValid(int, FluidResource)` | Accepts any fluid in the data map (lets non-`RefinedFuel` fluids settle into the tank). |
+| `GeneratorT1BE` (capture + getter + ValueInput/Output) | Snapshots data-map `fe_per_tick` and `burn_speed_multiplier` at burn start, persists them across world reloads via the 26.1 `ValueInput`/`ValueOutput` API, and serves them from the getters during the burn. |
 
 ## License
 
