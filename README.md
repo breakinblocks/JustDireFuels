@@ -76,9 +76,9 @@ The addon uses four mixins against JDT. None of them remove or break existing JD
 
 | Mixin target | What it does |
 |---|---|
-| `GeneratorFluidT1BE.getFePerFuelTick` | Returns data-map `fe_per_mb` when the tank's fluid is in the map; otherwise lets JDT's `RefinedFuel.fePerMb` run. |
+| `GeneratorFluidT1BE` | Configures only the Fluid Generator T1 tank to accept data-map fuels while preserving JDT `RefinedFuel`, and returns data-map `fe_per_mb` when present. |
 | `GeneratorFluidItemHandler.isItemValid` | Accepts buckets/containers of any fluid present in the data map. |
-| `JustDireFluidTank.isFluidValid` | Accepts any fluid in the data map (lets non-`RefinedFuel` fluids settle into the tank). |
+| `RefinedFuelSlot.mayPlace` | Allows data-map fuel containers to be placed in the generator GUI slot. |
 | `GeneratorT1BE` (capture + getter + NBT) | Snapshots data-map `fe_per_tick` and `burn_speed_multiplier` at burn start, persists them across world reloads, and serves them from the getters during the burn. |
 
 ## License
