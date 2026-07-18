@@ -1,0 +1,23 @@
+modLoader="javafml"
+loaderVersion="[2,)"
+license="MIT"
+
+[[mods]]
+modId="justdirefuelstest"
+version="1.0.0"
+displayName="Just Dire Fuels Game Tests"
+description='''Development-only NeoForge GameTests for Just Dire Fuels.'''
+
+[[dependencies.justdirefuelstest]]
+    modId="justdirefuels"
+    type="required"
+    versionRange="[1.0.0,)"
+    ordering="AFTER"
+    side="BOTH"
+
+[[dependencies.justdirefuelstest]]
+    modId="justdirethings"
+    type="required"
+    versionRange="[1.5.7,)"
+    ordering="AFTER"
+    side="BOTH"

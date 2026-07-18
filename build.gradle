@@ -46,6 +46,13 @@ java {
     }
 }
 
+sourceSets {
+    gameTest {
+        compileClasspath += sourceSets.main.output + sourceSets.main.compileClasspath
+        runtimeClasspath += output + compileClasspath + sourceSets.main.runtimeClasspath
+    }
+}
+
 neoForge {
     version = project.neo_version
 
@@ -54,11 +61,22 @@ neoForge {
         minecraftVersion = project.parchment_minecraft_version
     }
 
+    mods {
+        "${mod_id}" {
+            sourceSet(sourceSets.main)
+        }
+
+        justdirefuelstest {
+            sourceSet(sourceSets.gameTest)
+        }
+    }
+
     runs {
         configureEach {
             systemProperty 'forge.logging.markers', 'REGISTRIES'
             logLevel = org.slf4j.event.Level.DEBUG
             gameDirectory = file("runs/${name}")
+            loadedMods = [mods."${mod_id}"]
         }
 
         client {
@@ -71,23 +89,29 @@ neoForge {
             programArgument '--nogui'
         }
 
+        gameTestServer {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gameTest
+            loadedMods.add(mods.justdirefuelstest)
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'minecraft,justdirefuelstest'
+        }
+
         data {
             data()
             programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
         }
     }
 
-    mods {
-        "${mod_id}" {
-            sourceSet(sourceSets.main)
-        }
-    }
 }
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 configurations {
     runtimeClasspath.extendsFrom localRuntime
+    gameTestImplementation.extendsFrom implementation
+    gameTestCompileOnly.extendsFrom compileOnly
+    gameTestRuntimeOnly.extendsFrom runtimeOnly
+    gameTestRuntimeClasspath.extendsFrom localRuntime
 }
 
 dependencies {
