@@ -4,6 +4,7 @@
   "compatibilityLevel": "JAVA_21",
   "refmap": "mixins.justdirefuels.refmap.json",
   "mixins": [
+    "BaseMachineBEMixin",
     "GeneratorFluidT1BEMixin",
     "GeneratorFluidItemHandlerMixin",
     "RefinedFuelSlotMixin",

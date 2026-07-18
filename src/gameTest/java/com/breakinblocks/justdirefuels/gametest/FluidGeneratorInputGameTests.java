@@ -10,6 +10,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -115,6 +116,41 @@ public final class FluidGeneratorInputGameTests {
 
         helper.assertValueEqual(generator.getFluidTank().getFluidAmount(), 0, "consumed lava amount");
         helper.assertValueEqual(generator.getEnergyStorage().getEnergyStored(), 100, "generated energy");
+        helper.succeed();
+    }
+
+    @GameTest(templateNamespace = TEMPLATE_NAMESPACE, template = TEMPLATE)
+    public static void deserializedGeneratorAcceptsDataMapFuel(GameTestHelper helper) {
+        GeneratorFluidT1BE original = placeGenerator(helper);
+        helper.assertValueEqual(
+            original.getFluidTank().fill(new FluidStack(Fluids.LAVA, 1), IFluidHandler.FluidAction.EXECUTE),
+            1,
+            "saved lava fill"
+        );
+        CompoundTag saved = original.saveWithFullMetadata(helper.getLevel().registryAccess());
+
+        helper.setBlock(MACHINE_POS, Blocks.AIR);
+        GeneratorFluidT1BE reloaded = placeGenerator(helper);
+        reloaded.loadWithComponents(saved, helper.getLevel().registryAccess());
+
+        IFluidHandler fluidHandler = helper.getLevel().getCapability(
+            Capabilities.FluidHandler.BLOCK,
+            helper.absolutePos(MACHINE_POS),
+            Direction.NORTH
+        );
+        helper.assertTrue(fluidHandler != null, "reloaded generator must expose a block fluid capability");
+        helper.assertTrue(fluidHandler.getFluidInTank(0).is(Fluids.LAVA), "reloaded tank must retain saved lava");
+        fluidHandler.drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.EXECUTE);
+        helper.assertValueEqual(
+            fluidHandler.fill(new FluidStack(Fluids.WATER, 1000), IFluidHandler.FluidAction.SIMULATE),
+            0,
+            "reloaded generator water fill"
+        );
+        helper.assertValueEqual(
+            fluidHandler.fill(new FluidStack(Fluids.LAVA, 1000), IFluidHandler.FluidAction.EXECUTE),
+            1000,
+            "reloaded generator lava fill"
+        );
         helper.succeed();
     }
 

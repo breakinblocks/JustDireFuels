@@ -72,11 +72,12 @@ Copy the folder into `<world>/datapacks/`, `/reload`, and check JEI.
 
 ## How it works under the hood
 
-The addon uses four mixins against JDT. None of them remove or break existing JDT behavior; they layer a data-map check in front of it.
+The addon uses five mixins against JDT. None of them remove or break existing JDT behavior; they layer a data-map check in front of it.
 
 | Mixin target | What it does |
 |---|---|
-| `GeneratorFluidT1BE` | Configures only the Fluid Generator T1 tank to accept data-map fuels while preserving JDT `RefinedFuel`, and returns data-map `fe_per_mb` when present. |
+| `GeneratorFluidT1BE` | Configures the current Fluid Generator T1 tank to accept data-map fuels while preserving JDT `RefinedFuel`, and returns data-map `fe_per_mb` when present. |
+| `BaseMachineBE.loadAdditional` | Reapplies the Fluid Generator T1 validator after NeoForge replaces the serialized tank attachment during chunk/world loading. Other JDT machines are ignored. |
 | `GeneratorFluidItemHandler.isItemValid` | Accepts buckets/containers of any fluid present in the data map. |
 | `RefinedFuelSlot.mayPlace` | Allows data-map fuel containers to be placed in the generator GUI slot. |
 | `GeneratorT1BE` (capture + getter + NBT) | Snapshots data-map `fe_per_tick` and `burn_speed_multiplier` at burn start, persists them across world reloads, and serves them from the getters during the burn. |

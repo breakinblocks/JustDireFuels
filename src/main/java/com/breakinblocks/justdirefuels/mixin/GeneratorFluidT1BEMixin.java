@@ -1,10 +1,11 @@
 package com.breakinblocks.justdirefuels.mixin;
 
 import com.breakinblocks.justdirefuels.datamap.FluidFuelData;
+import com.breakinblocks.justdirefuels.datamap.FluidGeneratorTankValidator;
 import com.breakinblocks.justdirefuels.datamap.FuelLookup;
 import com.direwolf20.justdirethings.common.blockentities.GeneratorFluidT1BE;
 import com.direwolf20.justdirethings.common.capabilities.JustDireFluidTank;
-import com.direwolf20.justdirethings.common.fluids.basefluids.RefinedFuel;
+import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -27,10 +28,17 @@ public abstract class GeneratorFluidT1BEMixin {
         BlockState state,
         CallbackInfo ci
     ) {
-        JustDireFluidTank tank = ((GeneratorFluidT1BE) (Object) this).getFluidTank();
-        tank.setValidator(stack ->
-            stack.getFluid() instanceof RefinedFuel || FuelLookup.getFluid(stack.getFluid()) != null
-        );
+        GeneratorFluidT1BE generator = (GeneratorFluidT1BE) (Object) this;
+        FluidGeneratorTankValidator.apply(generator.getData(Registration.GENERATOR_FLUID_HANDLER));
+    }
+
+    @Inject(
+        method = "getFluidTank()Lcom/direwolf20/justdirethings/common/capabilities/JustDireFluidTank;",
+        at = @At("RETURN"),
+        require = 1
+    )
+    private void justdirefuels$validateCurrentTank(CallbackInfoReturnable<JustDireFluidTank> cir) {
+        FluidGeneratorTankValidator.apply(cir.getReturnValue());
     }
 
     @Inject(
