@@ -71,17 +71,6 @@ A working demo datapack lives at `examples/justdirefuels_demo/`. It does three t
 
 Copy the folder into `<world>/datapacks/`, `/reload`, and check JEI.
 
-## How it works under the hood
-
-The addon uses four mixins against JDT. None of them remove or break existing JDT behavior; they layer a data-map check in front of it.
-
-| Mixin target | What it does |
-|---|---|
-| `GeneratorFluidT1BE.getFePerFuelTick` | Returns data-map `fe_per_mb` when the tank's fluid is in the map; otherwise lets JDT's `RefinedFuel.fePerMb` run. |
-| `GeneratorFluidItemHandler.isValid(int, ItemResource)` | Accepts buckets/containers of any fluid present in the data map. |
-| `JustDireFluidTank.isValid(int, FluidResource)` | Accepts any fluid in the data map (lets non-`RefinedFuel` fluids settle into the tank). |
-| `GeneratorT1BE` (capture + getter + ValueInput/Output) | Snapshots data-map `fe_per_tick` and `burn_speed_multiplier` at burn start, persists them across world reloads via the 26.1 `ValueInput`/`ValueOutput` API, and serves them from the getters during the burn. |
-
 ## License
 
 MIT. See [LICENSE.md](LICENSE.md).

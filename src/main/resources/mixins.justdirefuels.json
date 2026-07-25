@@ -4,10 +4,15 @@
   "compatibilityLevel": "JAVA_25",
   "refmap": "mixins.justdirefuels.refmap.json",
   "mixins": [
+    "BaseMachineBEMixin",
     "GeneratorFluidT1BEMixin",
     "GeneratorFluidItemHandlerMixin",
     "JustDireFluidTankMixin",
+    "RefinedFuelSlotMixin",
     "GeneratorT1BEMixin"
   ],
+  "injectors": {
+    "defaultRequire": 1
+  },
   "minVersion": "0.8"
 }
