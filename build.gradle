@@ -4,6 +4,7 @@ plugins {
     id 'idea'
     id 'maven-publish'
     id 'net.neoforged.moddev' version '2.0.137'
+    id 'me.modmuss50.mod-publish-plugin' version '0.8.4'
 }
 
 tasks.named('wrapper', Wrapper).configure {
@@ -149,5 +150,23 @@ idea {
     module {
         downloadSources = true
         downloadJavadoc = true
+    }
+}
+
+publishMods {
+    file = jar.archiveFile
+    changelog = file("metadata/changelogs/${mod_version}.md").text
+    type = STABLE
+    modLoaders.add('neoforge')
+
+    curseforge {
+        accessToken = providers.environmentVariable('CURSEFORGE_TOKEN')
+        projectId = '1554863'
+        minecraftVersions.add(minecraft_version)
+        javaVersions.add(JavaVersion.VERSION_21)
+        clientRequired = true
+        serverRequired = true
+        requires 'just-dire-things'
+        optional 'jei'
     }
 }
