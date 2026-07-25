@@ -1,7 +1,7 @@
 package com.breakinblocks.justdirefuels.mixin;
 
 import com.breakinblocks.justdirefuels.datamap.FuelLookup;
-import com.direwolf20.justdirethings.common.capabilities.GeneratorFluidItemHandler;
+import com.direwolf20.justdirethings.common.containers.slots.RefinedFuelSlot;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -12,15 +12,15 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(GeneratorFluidItemHandler.class)
-public abstract class GeneratorFluidItemHandlerMixin {
+@Mixin(RefinedFuelSlot.class)
+public abstract class RefinedFuelSlotMixin {
     @Inject(
-        method = "isItemValid(ILnet/minecraft/world/item/ItemStack;)Z",
+        method = "mayPlace(Lnet/minecraft/world/item/ItemStack;)Z",
         at = @At("HEAD"),
         cancellable = true,
         require = 1
     )
-    private void justdirefuels$acceptDataMapFuels(int slot, ItemStack itemStack, CallbackInfoReturnable<Boolean> cir) {
+    private void justdirefuels$acceptDataMapFuels(ItemStack itemStack, CallbackInfoReturnable<Boolean> cir) {
         if (itemStack.isEmpty()) return;
         IFluidHandlerItem fluidHandlerItem = itemStack.getCapability(Capabilities.FluidHandler.ITEM);
         if (fluidHandlerItem == null) return;
